@@ -1,3 +1,5 @@
+( AI is used in this project, Usage note is at the end !)
+
 # kitty-dev-harness 🚀
 
 A zero-bloat, language-agnostic development workspace orchestrator for [Kitty](https://sw.kovidgoyal.net/kitty/). 
@@ -158,3 +160,19 @@ flowchart TD
 ## License
 
 This project is open-source and available under the [MIT License](LICENSE).
+
+---
+
+## Acknowledgements :
+Big thanks for the creator and maintainers of [bat](https://github.com/sharkdp/bat/) for providing such a cooler cat.
+
+While not directly used in this project, another thanks to the creator and contributors of [gum](https://github.com/charmbracelet/gum) for such a noob friendly Terminal UI creation.
+
+And lastly, for the creator and maintainers of [Kitty](https://sw.kovidgoyal.net/kitty/) for making a noob friendly IPC controls thingy.
+
+---
+
+## Ai usage :
+    I WROTE almost all the lines, AI, more specifically AGY : Gemini (HIGH), is there to glaze and trash talk me for making mistakes (provide correction) alongside common mistakes/things overlooked.
+    
+    tho, It did write the majority of this README, im way too lazy to document this. but i did add corrections here and there.

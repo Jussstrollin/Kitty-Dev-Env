@@ -92,19 +92,19 @@ kitty @ launch \
 	--type=tab \
 	--title "$ProjName | TERM" \
 	--cwd="$DIR" \
-	zsh -c "clear; echo 'Heres your terminal dawg'; exec zsh";
+	bash -c "clear; echo 'Heres your terminal dawg'; exec bash";
 
 kitty @ launch \
 	--type=tab \
 	--title "$ProjName | Compiler" \
 	--cwd="$DIR" \
-	zsh -c "clear; $SCRIPT_DIR/Watch_Build.sh $CompScript $DIR; exec zsh";
+	bash -c "clear; $SCRIPT_DIR/Watch_Build.sh $CompScript $DIR; exec bash";
 
 kitty @ launch \
 	--type=tab \
 	--title "$ProjName | Log view" \
 	--cwd="$DIR" \
-	zsh -c "clear; $SCRIPT_DIR/Watch_Log.sh $Log ; exec zsh";
+	bash -c "clear; $SCRIPT_DIR/Watch_Log.sh $Log ; exec bash";
 
 # Set current Tab to the editor
 cd "$DIR" || exit 1

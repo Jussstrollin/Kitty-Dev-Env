@@ -4,20 +4,24 @@ set -e
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 ProjName="Project"
-DIR=""
-CompScript=""
-Log=""
-Editor=""
+DIR="Empty"
+CompScript="Empty"
+Log="Empty"
+Editor="Empty"
+
+AiCommand="Empty"
+AiSession="Empty"
 
 function PrintHelp() {
-    echo -e "Usage : ./Script.sh [-flag ARG] [...]
+    echo -e "Usage : ./Script.sh [-flag ARG...] [...]
         Required : 
             -r | --Root : the ABSOLUTE path to project root directory 
             -c | --CompileScript : the ABSOLUTE Path to project Compile Script 
-            -l | --LogFile : the ABSOLUTE path to project log file 
             -e | --Editor : the editor command, Preferrably a terminal editor.
         Optional : 
+            -l | --LogFile : the ABSOLUTE path to project log file 
             -n | --Name : the name that will be used for the tabs. 
+            -ai | --AI : the CLI chatbot you want to use, for example : '--AI agy --conversation=3c374e40-b3a0-493d-a4a5-f413d0e11f08'
         Info : 
             -h | --help : prints this message. 
     "
@@ -50,6 +54,11 @@ while [[ $# -gt 0 ]]; do
             Editor=$2
             shift 2
             ;;
+        -ai | --AI)
+            AiCommand=$2
+            AiSession=$3
+            shift 3
+            ;;
         -h | --help)
             PrintHelp
             ;;
@@ -60,8 +69,10 @@ while [[ $# -gt 0 ]]; do
         esac
 done
 
-# echo -e "$DIR | $CompScript | $Log | $ProjName"
-# exit 5
+if [[ $DIR == "Empty" || $CompScript == "Empty" || $Editor == "Empty" ]]; then
+    echo "Root, CompScript, or Editor MUST be provided, see -h | --help"
+    exit 5
+fi
 
 if [ ! -d "$DIR" ]; then
     echo "$DIR is an invalid directory!"
@@ -100,11 +111,21 @@ kitty @ launch \
 	--cwd="$DIR" \
 	bash -c "clear; $SCRIPT_DIR/Watch_Build.sh $CompScript $DIR; exec bash";
 
-kitty @ launch \
-	--type=tab \
-	--title "$ProjName | Log view" \
-	--cwd="$DIR" \
-	bash -c "clear; $SCRIPT_DIR/Watch_Log.sh $Log ; exec bash";
+if [[ $Log != "Empty" ]]; then
+    kitty @ launch \
+        --type=tab \
+        --title "$ProjName | Log view" \
+        --cwd="$DIR" \
+        bash -c "clear; $SCRIPT_DIR/Watch_Log.sh $Log ; exec bash";
+fi
+
+if [[ $AiCommand != "Empty" ]]; then
+    kitty @ launch \
+        --type=tab \
+        --title "$ProjName | Ai Chat" \
+        --cwd="$DIR" \
+        bash -c "clear; $AiCommand $AiSession; exec bash";
+fi
 
 # Set current Tab to the editor
 cd "$DIR" || exit 1

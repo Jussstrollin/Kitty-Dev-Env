@@ -111,14 +111,16 @@ kitty @ launch \
 	--type=tab \
 	--title "$ProjName | Compiler" \
 	--cwd="$DIR" \
-	bash -c "clear; $SCRIPT_DIR/Watch_Build.sh $CompScript $DIR; exec bash";
+	bash -c 'clear; "$1" "$2" "$3"; exec bash' _ \
+		"$SCRIPT_DIR/Watch_Build.sh" "$CompScript" "$DIR";
 
 if [[ $Log != "Empty" ]]; then
     kitty @ launch \
         --type=tab \
         --title "$ProjName | Log view" \
         --cwd="$DIR" \
-        bash -c "clear; $SCRIPT_DIR/Watch_Log.sh $Log ; exec bash";
+        bash -c 'clear; "$1" "$2"; exec bash' _ \
+            "$SCRIPT_DIR/Watch_Log.sh" "$Log";
 fi
 
 if [[ $AiCommand != "Empty" ]]; then

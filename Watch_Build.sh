@@ -1,6 +1,11 @@
 #!/bin/bash
 set -e  # Exit on error
 
+if ! command -v gum &> /dev/null; then
+   echo "Gum could not be found, Please install Gum"
+   exit 5
+fi
+
 CompileScript=$1
 ProjectRootDir=$2
 
@@ -9,7 +14,7 @@ if [[ -z "$CompileScript" || -z "$ProjectRootDir" ]]; then
    exit 1
 fi
 
-if [[ ! -d "$ProjectRootDir" || ! -d "$ProjectRootDir"/src || ! -d "$ProjectRootDir"/Resources ]]; then
+if [[ ! -d "$ProjectRootDir" ]]; then
    echo "Invalid Directory : $ProjectRootDir"
    exit 2
 fi
@@ -24,12 +29,30 @@ if [ ! -x "$CompileScript" ]; then
    exit 4
 fi
 
+if ! gum confirm "Start?"; then
+   echo "Operation Canceled"
+   exit 0
+fi
+
+# Collect existing watch directories
+watch_dirs=()
+for dir in src Source Resource wwwroot; do
+   if [[ -d "$ProjectRootDir/$dir" ]]; then
+      watch_dirs+=("$ProjectRootDir/$dir")
+   fi
+done
+
+if [[ ${#watch_dirs[@]} -eq 0 ]]; then
+   echo "No watchable directories found in : $ProjectRootDir (expected one of: src/ Source/ Resource/ wwwroot/)"
+   exit 6
+fi
+
 # Function to calculate hash of directory contents
 calculate_hash() {
-   find "$ProjectRootDir/src" "$ProjectRootDir/Source" "$ProjectRootDir/Resources" -type f -exec sha256sum {} + 2>/dev/null | sort | sha256sum | cut -d' ' -f1
+   find "${watch_dirs[@]}" -type f -exec sha256sum {} + 2>/dev/null | sort | sha256sum | cut -d' ' -f1
 }
 
-echo "Watching $ProjectRootDir/src and $ProjectRootDir/Resources for changes (adaptive polling, max 5s)..."
+echo "Watching ${watch_dirs[*]} for changes (adaptive polling, max 5s)..."
 
 # Initial hash
 previous_hash=$(calculate_hash)

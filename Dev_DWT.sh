@@ -89,9 +89,11 @@ if [ ! -x "$CompScript" ]; then
     exit 3
 fi
 
-if [ ! -f "$Log" ]; then
-    echo "$Log is not a valid log file!"
-    exit 2
+if [[ "$Log" != "Empty" ]]; then
+    if [ ! -f "$Log" ]; then
+        echo "$Log is not a valid log file!"
+        exit 2
+    fi
 fi
 
 if ! command -v "$Editor" &> /dev/null; then

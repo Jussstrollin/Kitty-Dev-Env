@@ -36,7 +36,7 @@ fi
 
 # Collect existing watch directories
 watch_dirs=()
-for dir in src Source Resource wwwroot; do
+for dir in src Source Resource; do
    if [[ -d "$ProjectRootDir/$dir" ]]; then
       watch_dirs+=("$ProjectRootDir/$dir")
    fi
